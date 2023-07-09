@@ -192,8 +192,34 @@ function handleSpecialOperator(value) {
   }
 }
 
+function flushOperation(intBuffer) {
+  if (previousOperator === '+') {
+    initialVal += intBuffer;
+    result.textContent = `(${initialVal})`;
+  } else if (previousOperator === '-') {
+    initialVal -= intBuffer;
+    result.textContent = `(${initialVal})`;
+  } else if (previousOperator === 'X') {
+    initialVal *= intBuffer;
+    result.textContent = `(${initialVal})`;
+  } else if (previousOperator === '/') {
+    initialVal /= intBuffer;
+    result.textContent = `(${initialVal})`;
+  }
+}
+
 function handleMath(value) {
-  // to implement
+  if (output.textContent === '') {
+    return;
+  }
+  if (initialVal === 0) {
+    initialVal = Number(buffer);
+  } else {
+    flushOperation(Number(buffer));
+  }
+
+  previousOperator = value;
+  buffer = '0';
 }
 
 function handleSymbol(value) {
@@ -220,6 +246,16 @@ function handleSymbol(value) {
     case '+':
       handleMath(value);
       break;
+    case '=':
+      if (previousOperator === null) {
+        return;
+      } else { 
+        flushOperation(Number(buffer));
+        previousOperator = null;
+        buffer = initialVal;
+        initialVal = 0;
+        output.textContent = buffer;
+      }
   }
 }
 

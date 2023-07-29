@@ -7,8 +7,7 @@
 }
 
 body {
-  min-height: 100vh;
-  border: 1px solid red;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +16,7 @@ body {
 #container {
   max-width: 300px;
   width: 100%;
-  height: 500px;
+  height: 450px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -28,7 +27,7 @@ body {
 }
 
 .output {
-  height: 110px;
+  height: 100px;
   color: #29a8ff;
   text-align: right;
   font-size: 1.2rem;
@@ -38,8 +37,8 @@ body {
   border: 1px solid blue;
 }
 
-.result {
-  height: 110px;
+.input {
+  height: 100px;
   color: #29a8ff;
   text-align: right;
   font-size: 1.2rem;
@@ -62,11 +61,20 @@ button {
   width: 60px;
   height: 50px;
   cursor: pointer;
-  background-color: #303136;
+  background-color: #09090a;
   color: #29a8ff;
   border-radius: 10px;
   border: none;
   font-size: 1.2rem;
+  transition: all 0.1s ease-in-out;
+}
+
+button:hover {
+  background-color: #303136;
+}
+
+.clicked {
+  transform: scale(1.1);
 }
 
 .clear {
@@ -74,7 +82,19 @@ button {
   color: #fff;
 }
 
+.clear:hover {
+  background-color: #303136;
+}
+
 .operator {
   background-color: #005db2;
   color: #fff;
+}
+
+.operator:last-of-type {
+  width: 136px;
+}
+
+.operator:hover {
+  background-color: #043c6f;
 }

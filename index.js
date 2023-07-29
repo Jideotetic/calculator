@@ -179,6 +179,7 @@ function flushOperation(value) {
     buffer = '';
     initialValue = value;
     input.textContent = `${initialValue}${operator}${finalValue}=`;
+  } else if (!calculating && buffer === '') {
   } else if (!calculating) {
     finalValue = value;
     calculating = true;

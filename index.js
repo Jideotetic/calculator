@@ -17,7 +17,6 @@ for (const button of buttons) {
 }
 
 function handleButton(e) {
-  debugger;
   e.target.classList.add('clicked');
   if (isNaN(e.target.textContent)) {
     handleSymbol(e.target.textContent);

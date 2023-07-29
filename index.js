@@ -148,7 +148,13 @@ function handleMath(value) {
   }
 
   smallText.textContent = value;
-  if (initialValue === 0) {
+  if (initialValue !== 0 && input.textContent === '') {
+    initialValue = +buffer;
+    finalValue = +buffer;
+    output.textContent = initialValue;
+    input.textContent = `${finalValue}`;
+    input.appendChild(smallText);
+  } else if (initialValue === 0) {
     initialValue = +buffer;
     finalValue = +buffer;
     output.textContent = initialValue;
@@ -169,10 +175,20 @@ function handleMath(value) {
 }
 
 function flushOperation(value) {
+  if (!calculating && input.textContent === '') {
+    buffer = '';
+    initialValue = value;
+    input.textContent = `${initialValue}${operator}${finalValue}=`;
+  } else if (!calculating) {
+    finalValue = value;
+    calculating = true;
+  } else if (buffer === '0') {
+    input.textContent = `${initialValue}${operator}${finalValue}=`;
+  } else {
+    initialValue = value;
+    input.textContent = `${initialValue}${operator}${finalValue}=`;
+  }
   if (operator === '+') {
-    if (!calculating) {
-      finalValue = value;
-    }
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
       if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
@@ -190,9 +206,6 @@ function flushOperation(value) {
     }
     output.textContent = `${initialValue}`;
   } else if (operator === '-') {
-    if (!calculating) {
-      finalValue = value;
-    }
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
       if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
@@ -210,9 +223,6 @@ function flushOperation(value) {
     }
     output.textContent = `${initialValue}`;
   } else if (operator === 'x') {
-    if (!calculating) {
-      finalValue = value;
-    }
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
       if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
@@ -230,14 +240,31 @@ function flushOperation(value) {
     }
     output.textContent = `${initialValue}`;
   } else if (operator === '÷') {
-    initialValue /= value;
+    if (input.textContent.includes('=')) {
+      input.textContent = `${initialValue}${operator}${finalValue}=`;
+      if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
+        initialValue = (((initialValue * 10) / finalValue) * 10) / 100;
+      } else {
+        initialValue /= finalValue;
+      }
+    } else {
+      input.textContent += `${finalValue}=`;
+      if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
+        initialValue = (((initialValue * 10) / finalValue) * 10) / 100;
+      } else {
+        initialValue /= finalValue;
+      }
+    }
     output.textContent = `${initialValue}`;
-    input.textContent += `${value}=`;
   }
 }
 
 function handleNumber(value) {
   if (output.textContent === '') {
+    return;
+  }
+
+  if (buffer.length === 16) {
     return;
   }
 
@@ -247,6 +274,13 @@ function handleNumber(value) {
     if (input.textContent.includes('=')) {
       input.textContent = '';
     }
+  } else if (calculating) {
+    buffer = value;
+    output.textContent = buffer;
+    if (input.textContent.includes('=')) {
+      input.textContent = '';
+    }
+    return;
   } else {
     buffer += value;
     output.textContent = buffer;

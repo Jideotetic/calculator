@@ -1,4 +1,3 @@
-'use strict';
 const buttons = document.querySelector('.buttons-container').children;
 const output = document.querySelector('.output');
 const input = document.querySelector('.input');
@@ -211,9 +210,25 @@ function flushOperation(value) {
     }
     output.textContent = `${initialValue}`;
   } else if (operator === 'x') {
-    initialValue *= value;
+    if (!calculating) {
+      finalValue = value;
+    }
+    if (input.textContent.includes('=')) {
+      input.textContent = `${initialValue}${operator}${finalValue}=`;
+      if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
+        initialValue = (initialValue * 10 * finalValue * 10) / 10;
+      } else {
+        initialValue *= finalValue;
+      }
+    } else {
+      input.textContent += `${finalValue}=`;
+      if (!Number.isInteger(initialValue) && !Number.isInteger(finalValue)) {
+        initialValue = (initialValue * 10 * finalValue * 10) / 10;
+      } else {
+        initialValue *= finalValue;
+      }
+    }
     output.textContent = `${initialValue}`;
-    input.textContent += `${value}=`;
   } else if (operator === '÷') {
     initialValue /= value;
     output.textContent = `${initialValue}`;

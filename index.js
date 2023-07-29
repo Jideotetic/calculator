@@ -7,6 +7,7 @@ let initialValue = 0;
 let finalValue = 0;
 let operator = null;
 let calculating = true;
+const smallText = document.createElement('sub');
 
 for (const button of buttons) {
   button.addEventListener('click', handleButton);
@@ -17,6 +18,7 @@ for (const button of buttons) {
 }
 
 function handleButton(e) {
+  // debugger;
   e.target.classList.add('clicked');
   if (isNaN(e.target.textContent)) {
     handleSymbol(e.target.textContent);
@@ -104,7 +106,7 @@ function deleteOutput(value) {
     output.textContent = buffer;
     input.textContent = '';
   } else if (value === 'DEL') {
-    if (initialValue !== 0) {
+    if (input.textContent.includes('=')) {
       input.textContent = '';
     } else if (calculating) {
       return;
@@ -126,10 +128,16 @@ function handlePoint(value) {
   }
 
   if (buffer.includes(value)) {
+    if (input.textContent.includes('=')) {
+      input.textContent = '';
+    }
     return;
   } else {
     buffer += value;
     output.textContent = buffer;
+    if (input.textContent.includes('=')) {
+      input.textContent = '';
+    }
   }
 
   calculating = false;
@@ -140,26 +148,21 @@ function handleMath(value) {
     return;
   }
 
-  if (buffer.indexOf('.') === buffer.length - 1) {
-    buffer = buffer.slice(0, -1);
-  }
-
-  if (buffer.length === 3 && buffer.includes('.') && buffer.slice(-1) === '0') {
-    buffer = buffer.slice(0, -2);
-  }
-
+  smallText.textContent = value;
   if (initialValue === 0) {
     initialValue = +buffer;
     finalValue = +buffer;
-    output.textContent = buffer;
-    input.textContent = `${initialValue}${value}`;
+    output.textContent = initialValue;
+    input.textContent = `${finalValue}`;
+    input.appendChild(smallText);
   } else if (calculating) {
     output.textContent = `${initialValue}`;
   } else {
     flushOperation(+buffer);
   }
 
-  input.textContent = `${initialValue}${value}`;
+  input.textContent = `${initialValue}`;
+  input.appendChild(smallText);
   operator = value;
   buffer = '0';
   calculating = true;
@@ -210,9 +213,15 @@ function handleNumber(value) {
   if (buffer === '0') {
     buffer = value;
     output.textContent = buffer;
+    if (input.textContent.includes('=')) {
+      input.textContent = '';
+    }
   } else {
     buffer += value;
     output.textContent = buffer;
+    if (input.textContent.includes('=')) {
+      input.textContent = '';
+    }
   }
 
   calculating = false;

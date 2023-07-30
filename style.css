@@ -37,14 +37,13 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: none;
-  transition: all 0.5s ease-in-out;
 }
 
 .output {
   height: 100px;
   color: #29a8ff;
   text-align: right;
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   display: flex;
   align-items: center;
   margin: 5.5px;

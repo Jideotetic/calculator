@@ -127,19 +127,18 @@ function handlePoint(value) {
     return;
   }
 
+  // Check if previous calculation has been done
+  if (input.textContent.includes('=')) {
+    input.textContent = '';
+  }
+  // End
+
   if (buffer.includes(value)) {
-    if (input.textContent.includes('=')) {
-      input.textContent = '';
-    }
     return;
   } else {
     buffer += value;
     output.textContent = buffer;
-    if (input.textContent.includes('=')) {
-      input.textContent = '';
-    }
   }
-
   calculating = false;
 }
 
@@ -192,10 +191,13 @@ function flushOperation(value) {
     initialValue = value;
     input.textContent = `${initialValue}${operator}${finalValue}=`;
   } else if (!calculating && buffer === '') {
+    // Do nothing
   } else if (!calculating) {
     finalValue = value;
     calculating = true;
   } else if (buffer === '0') {
+    input.textContent = `${initialValue}${operator}${finalValue}=`;
+  } else if (buffer !== '0') {
     input.textContent = `${initialValue}${operator}${finalValue}=`;
   } else {
     initialValue = value;
@@ -218,6 +220,12 @@ function flushOperation(value) {
       }
     }
     output.textContent = `${initialValue}`;
+    if (output.textContent.length > 15) {
+      initialValue = initialValue.toExponential();
+      output.textContent = `${initialValue}`;
+      output.style.fontSize = '1.3rem';
+      initialValue = +initialValue;
+    }
   } else if (operator === '-') {
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
@@ -235,6 +243,12 @@ function flushOperation(value) {
       }
     }
     output.textContent = `${initialValue}`;
+    if (output.textContent.length > 15) {
+      initialValue = initialValue.toExponential();
+      output.textContent = `${initialValue}`;
+      output.style.fontSize = '1.3rem';
+      initialValue = +initialValue;
+    }
   } else if (operator === 'x') {
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
@@ -252,6 +266,12 @@ function flushOperation(value) {
       }
     }
     output.textContent = `${initialValue}`;
+    if (output.textContent.length > 15) {
+      initialValue = initialValue.toExponential();
+      output.textContent = `${initialValue}`;
+      output.style.fontSize = '1.3rem';
+      initialValue = +initialValue;
+    }
   } else if (operator === '÷') {
     if (input.textContent.includes('=')) {
       input.textContent = `${initialValue}${operator}${finalValue}=`;
@@ -274,19 +294,23 @@ function flushOperation(value) {
       output.style.fontSize = '1.5rem';
     } else {
       output.textContent = `${initialValue}`;
-    }
-
-    if (output.textContent.length > 16) {
-      output.style.fontSize = '1.3rem';
+      if (output.textContent.length > 15) {
+        initialValue = initialValue.toExponential();
+        output.textContent = `${initialValue}`;
+        output.style.fontSize = '1.3rem';
+        initialValue = +initialValue;
+      }
     }
   }
 }
 
+// Function to render number to the screen
 function handleNumber(value) {
   if (output.textContent === '') {
     return;
   }
 
+  // Prevent input more than 15
   if (buffer.length === 15) {
     info.style.display = 'block';
     setTimeout(() => {
@@ -294,27 +318,29 @@ function handleNumber(value) {
     }, 1000);
     return;
   }
+  // End
+
+  // Check if previous calculation has been done
+  if (input.textContent.includes('=')) {
+    input.textContent = '';
+  }
+  // End
 
   if (buffer === '0') {
+    // If buffer is zero and operator is null, assign value to buffer
     buffer = value;
     output.textContent = buffer;
-    if (input.textContent.includes('=')) {
-      input.textContent = '';
-    }
   } else if (calculating) {
+    // Checks if buffer is not 0 and operator is not null, oncclick of operator reset calculating to true
     buffer = value;
     output.textContent = buffer;
-    if (input.textContent.includes('=')) {
-      input.textContent = '';
-    }
     return;
   } else {
+    // If buffer is not zero and operator is null, concatenate value with buffer
     buffer += value;
     output.textContent = buffer;
-    if (input.textContent.includes('=')) {
-      input.textContent = '';
-    }
   }
 
+  // Resetting calculating back to false to continue concatenating if buffer is not 0
   calculating = false;
 }

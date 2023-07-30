@@ -18,31 +18,12 @@ for (const button of buttons) {
 }
 
 function handleButton(e) {
-  // debugger;
   e.target.classList.add('clicked');
   if (isNaN(e.target.textContent)) {
     handleSymbol(e.target.textContent);
   } else {
     handleNumber(e.target.textContent);
   }
-
-  console.log(
-    'buffer',
-    '==>',
-    buffer,
-    'initialValue',
-    '==>',
-    initialValue,
-    'operator',
-    '==>',
-    operator,
-    'calculating',
-    '==>',
-    calculating,
-    'finalValue',
-    '==>',
-    finalValue
-  );
 }
 
 function handleSymbol(value) {
@@ -79,6 +60,7 @@ function onOffCalculator(value) {
     operator = null;
     calculating = true;
     output.textContent = buffer;
+    output.style.fontSize = '1.9rem';
     document.querySelector('.clear').textContent = 'OFF';
   } else {
     buffer = '0';
@@ -88,6 +70,7 @@ function onOffCalculator(value) {
     calculating = true;
     output.textContent = '';
     input.textContent = '';
+    output.style.fontSize = '1.9rem';
     document.querySelector('.clear').textContent = 'ON';
   }
 }
@@ -105,6 +88,7 @@ function deleteOutput(value) {
     calculating = true;
     output.textContent = buffer;
     input.textContent = '';
+    output.style.fontSize = '1.9rem';
   } else if (value === 'DEL') {
     if (input.textContent.includes('=')) {
       input.textContent = '';
@@ -114,6 +98,7 @@ function deleteOutput(value) {
       if (buffer.length === 1) {
         buffer = '0';
         output.textContent = buffer;
+        output.style.fontSize = '1.9rem';
       } else {
         buffer = buffer.slice(0, -1);
         output.textContent = buffer;
@@ -140,6 +125,7 @@ function handlePoint(value) {
     output.textContent = buffer;
   }
   calculating = false;
+  output.style.fontSize = '1.9rem';
 }
 
 function handleMath(value) {
@@ -331,7 +317,7 @@ function handleNumber(value) {
     buffer = value;
     output.textContent = buffer;
   } else if (calculating) {
-    // Checks if buffer is not 0 and operator is not null, oncclick of operator reset calculating to true
+    // Checks if buffer is not 0 and operator is not null, onclick of operator reset calculating to true
     buffer = value;
     output.textContent = buffer;
     return;
@@ -343,4 +329,5 @@ function handleNumber(value) {
 
   // Resetting calculating back to false to continue concatenating if buffer is not 0
   calculating = false;
+  output.style.fontSize = '1.9rem';
 }

@@ -1,10 +1,11 @@
 const buttons = document.querySelector('.buttons-container').children;
 const output = document.querySelector('.output');
 const input = document.querySelector('.input');
+const info = document.querySelector('.info');
 let buffer = '0';
 let initialValue = 0;
 let finalValue = 0;
-let operator = null;
+let operator;
 let calculating = true;
 const smallText = document.createElement('sub');
 
@@ -175,7 +176,18 @@ function handleMath(value) {
 }
 
 function flushOperation(value) {
-  if (!calculating && input.textContent === '') {
+  if (isNaN(initialValue)) {
+    buffer = '0';
+    initialValue = 0;
+    finalValue = 0;
+    operator = null;
+    calculating = true;
+    input.textContent = '';
+    output.textContent = buffer;
+    return;
+  } else if (operator === null) {
+    input.textContent = `${buffer}=`;
+  } else if (!calculating && input.textContent === '') {
     buffer = '';
     initialValue = value;
     input.textContent = `${initialValue}${operator}${finalValue}=`;
@@ -256,7 +268,17 @@ function flushOperation(value) {
         initialValue /= finalValue;
       }
     }
-    output.textContent = `${initialValue}`;
+    if (isNaN(initialValue)) {
+      input.textContent = `${buffer}${operator}`;
+      output.textContent = 'Result is undefined';
+      output.style.fontSize = '1.5rem';
+    } else {
+      output.textContent = `${initialValue}`;
+    }
+
+    if (output.textContent.length > 16) {
+      output.style.fontSize = '1.3rem';
+    }
   }
 }
 
@@ -265,7 +287,11 @@ function handleNumber(value) {
     return;
   }
 
-  if (buffer.length === 16) {
+  if (buffer.length === 15) {
+    info.style.display = 'block';
+    setTimeout(() => {
+      info.style.display = 'none';
+    }, 1000);
     return;
   }
 
